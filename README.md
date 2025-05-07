@@ -81,7 +81,7 @@ bash
 Copy
 Edit
 # Clone the repository
-git clone https://github.com/krishnasunnam/krishnasunnam.github.io.git
+git clone (https://github.com/VamshiSunnam/krishnasunnam.github.io)
 
 # Navigate to the directory
 cd krishnasunnam.github.io
