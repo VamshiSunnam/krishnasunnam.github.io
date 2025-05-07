@@ -1,0 +1,255 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krishna Sunnam's Portfolio</title>
+    <style>
+        body {
+            font-family: 'Calibri', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        header {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 2em 0;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        header p {
+            margin: 0.5em 0;
+            font-size: 1.2em;
+        }
+        nav {
+            background-color: #34495e;
+            padding: 1em 0;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 1em;
+            font-size: 1.1em;
+        }
+        nav a:hover {
+            color: #3498db;
+        }
+        section {
+            padding: 2em;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        section h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 0.5em;
+        }
+        .project, .experience, .certification, .leadership {
+            background-color: white;
+            padding: 1em;
+            margin: 1em 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1em;
+        }
+        .skill {
+            background-color: #3498db;
+            color: white;
+            padding: 0.5em 1em;
+            border-radius: 3px;
+        }
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+            nav a {
+                display: block;
+                margin: 0.5em 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Krishna Sunnam</h1>
+        <p>Machine Learning Engineer | Java Developer</p>
+        <p>Delivering Scalable ML Models and Microservices with Python, Java, and AWS</p>
+    </header>
+    <nav>
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#experience">Experience</a>
+        <a href="#projects">Projects</a>
+        <a href="#education">Education</a>
+        <a href="#certifications">Certifications</a>
+        <a href="#leadership">Leadership</a>
+        <a href="#contact">Contact</a>
+    </nav>
+    <section id="about">
+        <h2>About Me</h2>
+        <p>Machine Learning Engineer and Java Developer with 3+ years of experience delivering scalable ML models and microservices, achieving 30%+ efficiency gains in retail and financial systems. Proficient in Python, Java, AWS, and Spring Boot, with a Master’s in Business Analytics driving data-informed solutions. Adept at CI/CD, MLOps, and SAFe Agile, ensuring stakeholder success through innovative pipelines.</p>
+    </section>
+    <section id="skills">
+        <h2>Skills</h2>
+        <div class="skills-list">
+            <span class="skill">Python</span>
+            <span class="skill">Java</span>
+            <span class="skill">SQL</span>
+            <span class="skill">PySpark</span>
+            <span class="skill">TensorFlow</span>
+            <span class="skill">Scikit-learn</span>
+            <span class="skill">AWS (S3, Lambda, RDS, SageMaker)</span>
+            <span class="skill">Terraform</span>
+            <span class="skill">Spring Boot</span>
+            <span class="skill">RESTful APIs</span>
+            <span class="skill">Hibernate</span>
+            <span class="skill">Docker</span>
+            <span class="skill">Git</span>
+            <span class="skill">CI/CD (Jenkins, Git)</span>
+            <span class="skill">MLOps</span>
+            <span class="skill">SAFe Agile</span>
+        </div>
+    </section>
+    <section id="experience">
+        <h2>Experience</h2>
+        <div class="experience">
+            <h3>Machine Learning Engineer / Data Engineer, Giant Eagle</h3>
+            <p>Pittsburgh, PA (Remote) | December 2023 – Present</p>
+            <p>Deployed TensorFlow-based ML models on AWS SageMaker, improving demand forecasting accuracy by 20%. Built PySpark pipelines on AWS S3, reducing latency by 45% and deployment time by 35%. Designed AWS RDS and S3 architectures, saving $25,000 annually. Mentored 5 junior engineers and drove 95% adoption of predictive tools.</p>
+        </div>
+        <div class="experience">
+            <h3>Java Developer / API Engineer, HighRadius</h3>
+            <p>Hyderabad, Telangana, India | January 2021 – December 2022</p>
+            <p>Developed 60+ REST APIs with Spring Boot, boosting workflow reliability by 30%. Automated AWS Lambda/RDS deployments via Terraform, cutting costs by 25%. Optimized Hibernate queries, reducing API response times by 40%. Led SAFe Agile sprints, delivering 6 releases on time.</p>
+        </div>
+    </section>
+    <section id="projects">
+        <h2>Projects</h2>
+        <div class="project">
+            <h3>ML-Powered Supply Chain Optimization</h3>
+            <p>October 2024 – December 2024</p>
+            <p>Built TensorFlow ML model on AWS SageMaker, cutting logistics costs by 22% with 92% demand forecast accuracy. Open-sourced MLOps scripts on GitHub, earning 80+ stars.</p>
+            <p><a href="https://github.com/krishnasunnam/supply-chain-optimization" target="_blank">View on GitHub</a></p>
+        </div>
+        <div class="project">
+            <h3>Real-Time Fraud Detection API</h3>
+            <p>September 2023 – November 2023</p>
+            <p>Developed Spring Boot REST APIs with AWS RDS, improving fraud detection accuracy by 28%. Automated infrastructure via Terraform, ensuring 100% uptime.</p>
+            <p><a href="https://github.com/krishnasunnam/fraud-detection-api" target="_blank">View on GitHub</a></p>
+        </div>
+        <div class="project">
+            <h3>Predictive Maintenance Pipeline</h3>
+            <p>March 2024 – May 2024</p>
+            <p>Designed PySpark/Scikit-learn pipeline, reducing equipment downtime by 18%. Deployed on AWS EC2 with A/B testing, saving $15,000 in maintenance costs.</p>
+            <p><a href="https://github.com/krishnasunnam/predictive-maintenance" target="_blank">View on GitHub</a></p>
+        </div>
+    </section>
+    <section id="education">
+        <h2>Education</h2>
+        <div class="experience">
+            <h3>Master of Business Analytics, Kent State University</h3>
+            <p>Ohio, USA | January 2023 – May 2024</p>
+            <p>Coursework: Machine Learning, Data Engineering, Cloud Computing, API Development. Capstone: Built ML pipeline reducing inventory costs by 18%.</p>
+        </div>
+        <div class="experience">
+            <h3>Bachelor of Business Administration, GITAM University</h3>
+            <p>India | August 2019 – May 2022</p>
+            <p>Coursework: Statistics, Operations Management. Transitioned to tech via self-taught Java/Python and certifications.</p>
+        </div>
+    </section>
+    <section id="certifications">
+        <h2>Certifications</h2>
+        <div class="certification">
+            <p>AWS Certified Database Specialty (2024)</p>
+        </div>
+        <div class="certification">
+            <p>AWS Certified Machine Learning Specialty (Expected Q2 2025)</p>
+        </div>
+    </section>
+    <section id="leadership">
+        <h2>Leadership & Community Involvement</h2>
+        <div class="leadership">
+            <h3>GITAM University Tech Fest Organizer</h3>
+            <p>February 2020</p>
+            <p>Led Agile-based team to organize tech fest, raising $3,000 for student scholarships with 25% improved planning efficiency.</p>
+        </div>
+    </section>
+    <section id="contact">
+        <h2>Contact</h2>
+        <p>Email: sunnamkrish0@gmail.com</p>
+        <p>LinkedIn: <a href="https://linkedin.com/in/krishnasunnam" target="_blank">linkedin.com/in/krishnasunnam</a></p>
+        <p>GitHub: <a href="https://github.com/krishnasunnam" target="_blank">github.com/krishnasunnam</a></p>
+    </section>
+    <footer>
+        <p>© 2025 Krishna Sunnam. All rights reserved.</p>
+    </footer>
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const sectionId = this.getAttribute('href').substring(1);
+                document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
